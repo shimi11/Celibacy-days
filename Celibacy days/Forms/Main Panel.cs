@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 
 
@@ -19,7 +20,7 @@ namespace Celibacy_days
         int coutntYear;
         List<Forms.DayBox> allDAY;
 
-        public MainPanel()
+        private MainPanel()
         {
             InitializeComponent();
             hebrew_calendar = new Hebrew_calendar();
@@ -27,6 +28,14 @@ namespace Celibacy_days
             coutntYear = hebrew_calendar.getCurrentYear();
             allDAY = new List<Forms.DayBox>();
             displaDays();
+        }
+        private static readonly MainPanel instance = new MainPanel();
+        public static MainPanel Instance
+        {
+            get
+            {
+                return instance;
+            }
         }
 
         public void displaDays()
@@ -61,8 +70,8 @@ namespace Celibacy_days
             for (int i = 1; i <= days_per_month; i++)
             {
                 Forms.DayBox ucblank = new Forms.DayBox((allDAY.Count) % 7 + 1 + "", hebrew_calendar.FormatHebrew(i)
-                    , MonthName.Text, coutntMonth, YearName.Text, isLeapMonth, isLeapYear
-                    /*,((coutntYear % 1000) * 10000) + (coutntMonth * 100) + i*/);
+                    , MonthName.Text, coutntMonth, YearName.Text, isLeapMonth, isLeapYear,
+                   Converter.Instance.dateToInt(coutntYear, coutntMonth,i));
                 //ucblank.dayInMonth(hebrew_calendar.FormatHebrew(i));
                 allDAY.Add(ucblank);
             }
@@ -77,10 +86,11 @@ namespace Celibacy_days
                 allDAY.Add(ucblank);
             }
 
-            //tableLayoutPanel1.Controls.Clear();
-            //tableLayoutPanel1.Visible = false;
-            int width = tableLayoutPanel1.GetColumnWidths()[1];
-            int height = tableLayoutPanel1.GetRowHeights()[1];
+            tableLayoutPanel1.Controls.Clear();
+            //Thread.Sleep(2000);
+            tableLayoutPanel1.Visible = false;
+            //int width = tableLayoutPanel1.GetColumnWidths()[1];
+            //int height = tableLayoutPanel1.GetRowHeights()[1];
 
             for (int i = 0; i < 6; i++)
             {
@@ -91,11 +101,46 @@ namespace Celibacy_days
                 for (int j = 6; j >= 0; j--)
                 {
                     tableLayoutPanel1.Controls.Add(allDAY[(i * 7) + j],6-j,i+1);
-                    //tableLayoutPanel1.Controls.Add(c,6-j,i+1);
+                    //Thread.Sleep(500);
                 }
             }
-            //tableLayoutPanel1.Visible = true;
+            tableLayoutPanel1.Visible = true;
         }
 
+        private void buttonNext_Click(object sender, EventArgs e)
+        {
+            coutntMonth++;
+            if ((coutntMonth == 13 && !hebrew_calendar.LeapYear(coutntYear)) ||
+                (coutntMonth == 14 && hebrew_calendar.LeapYear(coutntYear)))
+            {
+                coutntYear++;
+                coutntMonth = 1;
+            }
+            displaDays();
+
+        }
+
+        private void buttonPrev_Click(object sender, EventArgs e)
+        {
+            coutntMonth--;
+            if (coutntMonth == 0)
+            {
+                coutntYear--;
+                coutntMonth = 12;
+                if (hebrew_calendar.LeapYear(coutntYear))
+                {
+                    coutntMonth++;
+                }
+            }
+            displaDays();
+
+        }
+        private void buttonGoToday_Click(object sender, EventArgs e)
+        {
+            coutntMonth = hebrew_calendar.getCurrentMonth();
+            coutntYear = hebrew_calendar.getCurrentYear();
+            displaDays();
+
+        }
     }
 }

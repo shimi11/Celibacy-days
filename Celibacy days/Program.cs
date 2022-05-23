@@ -16,7 +16,7 @@ namespace Celibacy_days
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainPanel());
+            Application.Run(MainPanel.Instance);
         }
     }
 }

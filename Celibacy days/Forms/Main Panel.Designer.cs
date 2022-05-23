@@ -177,6 +177,7 @@
             this.buttonPrev.TabIndex = 3;
             this.buttonPrev.Text = "הקודם ->";
             this.buttonPrev.UseVisualStyleBackColor = true;
+            this.buttonPrev.Click += new System.EventHandler(this.buttonPrev_Click);
             // 
             // buttonNext
             // 
@@ -187,6 +188,7 @@
             this.buttonNext.TabIndex = 4;
             this.buttonNext.Text = "<- הבא";
             this.buttonNext.UseVisualStyleBackColor = true;
+            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
             // 
             // buttonGoToday
             // 
@@ -197,6 +199,7 @@
             this.buttonGoToday.TabIndex = 5;
             this.buttonGoToday.Text = "עבור להיום";
             this.buttonGoToday.UseVisualStyleBackColor = true;
+            this.buttonGoToday.Click += new System.EventHandler(this.buttonGoToday_Click);
             // 
             // button4
             // 
