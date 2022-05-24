@@ -27,6 +27,9 @@ namespace Celibacy_days
             coutntMonth = hebrew_calendar.getCurrentMonth();
             coutntYear = hebrew_calendar.getCurrentYear();
             allDAY = new List<Forms.DayBox>();
+
+            Database.Instance.readDatabase();
+
             displaDays();
         }
         private static readonly MainPanel instance = new MainPanel();

@@ -48,11 +48,13 @@
   <ItemGroup>
     <Compile Include="Converter.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="Forms\Event.cs">
+    <Compile Include="Environment.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="Forms\EventPane.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Event.Designer.cs">
-      <DependentUpon>Event.cs</DependentUpon>
+    <Compile Include="Forms\EventPane.Designer.cs">
+      <DependentUpon>EventPane.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Main Panel.cs">
       <SubType>Form</SubType>
@@ -70,8 +72,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting.cs" />
-    <EmbeddedResource Include="Forms\Event.resx">
-      <DependentUpon>Event.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\EventPane.resx">
+      <DependentUpon>EventPane.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Main Panel.resx">
       <DependentUpon>Main Panel.cs</DependentUpon>

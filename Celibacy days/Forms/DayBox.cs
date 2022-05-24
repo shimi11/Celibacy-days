@@ -42,7 +42,7 @@ namespace Celibacy_days.Forms
 
             InitializeComponent();
             label_dayInMonth.Text = dayInMonth_;
-            //colorUpdate();
+            UpdateBoard();
         }
         public DayBox(string dayInMonth_)
         {
@@ -59,140 +59,51 @@ namespace Celibacy_days.Forms
         private void DayBox_Click(object sender, EventArgs e)
         {
             if (belongsToMonth)
-            {
-
-                if (Database.Instance.ThereIsEvent(dateDay) 
-                    != EventType.erorr)
-                {
-                }
-                else
-                {
-                    eventForm event_form = new eventForm(dayInWeek, dayInMonth, Month, MonthNum, year,
-                    isLeapMonth, isLeapYear);
-                    event_form.ShowDialog();
-                }
-                colorUpdate();
+            {   
+                eventForm event_form = new eventForm(dayInWeek, dayInMonth, Month, MonthNum, year,
+                isLeapMonth, isLeapYear);
+                event_form.ShowDialog();
+                UpdateBoard();
             }
 
         }
 
-        public void colorUpdate()
+        public void UpdateBoard()
         {
-            /*BackColor = Color.Blue;
-            panel3.BackColor = Color.FromArgb(200, 200, 255);
-            switch (database.ThereIsEvent(dateDay))
-            {
-                case EventType.erorr:
-                    {
-                        *//*if (dayInWeek == "7")
-                            BackColor = Color.Blue;
-                        else
-                            BackColor = Color.FromArgb(200, 200, 255);*//*
-                        break;
-                    }
-                case EventType.cycleNight:
-                    {
-                        panel5.BackColor = Color.Red;
-                        panel5.Visible = true;
-                        break;
-                    }
-                case EventType.cycleDay:
-                    {
-                        panel4.BackColor = Color.Red;
-                        panel4.Visible = true;
-                        break;
-                    }
-                *//*case EventType.cycle:
-                    {
-                        panel5.BackColor = Color.Red;
-                        panel5.Visible = true;
-                        panel4.BackColor = Color.Red;
-                        panel4.Visible = true;
-                        break;
-                    }*//*
-                default:
-                    {
-                        BackColor = Color.Black;
-                        break;
-                    }
-
-            }
-
-            if (calculating_info.isToday(dateDay))
-            {
-                panel1.BackColor = Color.Black;
-                panel2.BackColor = Color.Black;
-                flowLayoutPanel1.BackColor = Color.Black;
-                flowLayoutPanel2.BackColor = Color.Black;
-            }
-            else
-            {
-                panel1.BackColor = panel3.BackColor;
-                panel2.BackColor = panel3.BackColor;
-                flowLayoutPanel1.BackColor = panel3.BackColor;
-                flowLayoutPanel2.BackColor = panel3.BackColor;
-
-            }
-            AllCelibacyType.Clear();
-            List<InfoDay> AllCelibacy = new List<InfoDay>();
-            AllCelibacy = calculating_info.getAllCelibacyDay(true);
-            int len = AllCelibacy.Count;
-            for (int i = 0; i < len; i++)
-            {
-                if (dateDay == AllCelibacy[i].date)
+            this.BackColor = Color.FromArgb(100, 100, 255);
+            List<Event> list= Environment.Instance.getEvent(dateDay);
+            if(list != null)
+            { 
+                foreach (Event e in list)
                 {
-                    switch (AllCelibacy[i].celibacyTypes)
+                    switch (e.getType())
                     {
-                        case CelibacyType.erorr:
+                        case (int)VisionType.error:
                             {
+                                BackColor = Color.Black;
                                 break;
                             }
-                        case CelibacyType.celibacyDayTheMonth_D:
-                        case CelibacyType.Day30_D:
-                        case CelibacyType.Day31_D:
+                        case (int)VisionType.cycleNight:
                             {
-                                button2.Visible = true;
+                                this.labelCycleNight.BackColor = Color.Red;
+                                this.labelCycleNight.Visible = true;
                                 break;
                             }
-                        case CelibacyType.celibacyDayTheMonth_N:
-                        case CelibacyType.Day30_N:
-                        case CelibacyType.Day31_N:
+                        case (int)VisionType.cycleDay:
                             {
-                                button1.Visible = true;
+                                this.labelCycleDay.BackColor = Color.Red;
+                                this.labelCycleDay.Visible = true;
+                                break;
+                            }
+                        default:
+                            {
+                                BackColor = Color.Black;
                                 break;
                             }
 
                     }
                 }
-            }*/
-
-            /*AllCelibacyType = calculating_info.ThereIsCelibacy(dateDay);
-            int len = AllCelibacyType.Count;
-            for (int i = 0; i< len; i++)
-            {
-                switch(AllCelibacyType[i])
-                {
-                    case CelibacyType.erorr:
-                        {
-                            break;
-                        }
-                    case CelibacyType.celibacyDayTheMonth_D:
-                    case CelibacyType.Day30_D:
-                    case CelibacyType.Day31_D:
-                        {
-                            button2.Visible = true;
-                            break;
-                        }
-                    case CelibacyType.celibacyDayTheMonth_N:
-                    case CelibacyType.Day30_N:
-                    case CelibacyType.Day31_N:
-                        {
-                            button1.Visible = true;
-                            break;
-                        }
-
-                }
-            }*/
+            }
         }
 
     }

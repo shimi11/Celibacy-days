@@ -7,57 +7,7 @@ using System.IO;
 
 
 namespace Celibacy_days
-{
-
-    enum EventType { erorr = -1, cycleDay, cycleNight};
-    enum CelibacyType { erorr = -1, celibacyDayTheMonth_N , Day30_N, Day31_N,
-        celibacyDayTheMonth_D, Day30_D, Day31_D };
-
-    enum  TestsTypes
-    {
-        erorr = -1, celibacyDayTheMonth, Day30, Day31};
-
-    class Event
-    {
-        public int dateEvent;
-        public EventType eventType = new EventType();
-       /* public static bool operator >(Event Event1, Event Event2)
-        {
-            if (Event1.dateEvent > Event2.dateEvent)
-                return true;
-            return false;
-        }
-        public static bool operator <(Event Event1, Event Event2)
-        {
-            if (Event1.dateEvent < Event2.dateEvent)
-                return true;
-            return false;
-        }
-        public static bool operator <=(Event Event1, Event Event2)
-        {
-            if (Event1.dateEvent <= Event2.dateEvent)
-                return true;
-            return false;
-        }
-        public static bool operator >=(Event Event1, Event Event2)
-        {
-            if (Event1.dateEvent >= Event2.dateEvent)
-                return true;
-            return false;
-        }
-        public static bool operator ==(Event Event1, Event Event2)
-        {
-            if (Event1.dateEvent == Event2.dateEvent)
-                return true;
-            return false;
-        }
-        public static bool operator !=(Event Event1, Event Event2)
-        {
-            if (Event1.dateEvent != Event2.dateEvent)
-                return true;
-            return false;
-        }*/
-    }
+{   
     class DatabaseSettings
     {
         private DatabaseSettings()
@@ -161,47 +111,10 @@ namespace Celibacy_days
 
     class Database
     {
-
-        /*
-         public sealed class Singleton
-{
-
-    // Explicit static constructor to tell C# compiler
-    // not to mark type as beforefieldinit
-    static Singleton()
-    {
-    }
-
-    private Singleton()
-    {
-    }
-
-    public static Singleton Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
-}
-
-         */
         private Database() {
-            hashmapEvent.Add((int)EventType.erorr, "שגיאה");
-            hashmapEvent.Add((int)EventType.cycleDay, "ראית יום");
-            hashmapEvent.Add((int)EventType.cycleNight, "ראית לילה");
-            //hashmapEvent.Add((int)EventType.cycle, "ראיה");
-            readDatabase();
-                }
-        //static Database()
-        //{
-        //}
-        // private static Database instance = null;
+        }
         private static readonly Database instance = new Database();
-        string fileName = @"Database.txt";
-        private List<Event> AllEvents = new List<Event>();
-
-        public Dictionary<int, string> hashmapEvent = new Dictionary<int, string>();
+        readonly string fileName = @"Database.txt";
 
         public static Database Instance
         {
@@ -210,19 +123,16 @@ namespace Celibacy_days
                 return instance;
             }
         }
-        private bool readDatabase() {
+        public bool readDatabase() {
             bool r = false;
             try
             {
                 string[] lista = File.ReadAllLines(fileName);
 
-                List<string> CSList = new List<string>();
                 foreach (string element in lista)
                 {
-
-                    AllEvents.Add(eventRecovery(element));
+                    Environment.Instance.addEvent(eventRecovery(element));
                 }
-                AllEvents.Sort(CompareDinosByLength);
                 r = true;
             }
             catch
@@ -231,55 +141,25 @@ namespace Celibacy_days
             }
             return r;
         }
-        private static int CompareDinosByLength(Event x, Event y)
+        
+        public EventVision eventRecovery(string data)
         {
-            if (x.dateEvent > y.dateEvent)
-                return 1;
-            if (x.dateEvent < y.dateEvent)
-                return -1;
-            return 0;
-        }
-        private void addEvent(Event data)
-        {
-            AllEvents.Add(data);
-
-            AllEvents.Sort(CompareDinosByLength);
-            if(data.eventType != EventType.erorr)
-                writeToFile(data);
-        }
-        public void addEvent(int dateEvent_, EventType eventType_)
-        {
-            Event event_ = new Event();
-            event_.dateEvent = dateEvent_;
-            event_.eventType = eventType_;
-            int aldEvent = (int)ThereIsEvent(event_.dateEvent);
-            if (aldEvent == (int)EventType.erorr)
-            {
-                addEvent(event_);
-            }
-        }
-        public Event eventRecovery(string data)
-        {
-            Event event_ = new Event();
             int Start;
             Start = data.IndexOf(" ", 0);
             if (Start == -1)
             {
-                event_.dateEvent = 888;
-                event_.eventType = EventType.erorr;
-                return event_;
+                throw new Exception("Unable to read data:" + data);
             }
-            // End = strSource.IndexOf(strEnd, Start);
-            event_.dateEvent = Int32.Parse(data.Substring(0,Start));
-            event_.eventType = (EventType)Int32.Parse(data.Substring(Start));
+            EventVision event_ = new EventVision((VisionType)Int32.Parse(data.Substring(Start))
+                , Int32.Parse(data.Substring(0, Start)));
             return event_;
         }
         public string eventRecovery(Event data)
         {
-            string str = data.dateEvent + " " + (int)data.eventType;
+            string str = data.dateEvent + " " + (int)data.getType();
             return str;
         }
-        private void writeToFile(Event data)
+        public void writeToFile(Event data)
         {
             using (var writer = File.AppendText(fileName))
             {
@@ -287,22 +167,9 @@ namespace Celibacy_days
             }
             //File.WriteAllText(fileName, eventRecovery(data));
         }
-        public EventType ThereIsEvent (int date)
-        {
-            int listLenght = AllEvents.Count;
-            for (int i = 0; i< listLenght; i++)
-            {
-                if (AllEvents[i].dateEvent == date)
-                    return AllEvents[i].eventType;
-                if (AllEvents[i].dateEvent > date)
-                    return EventType.erorr;
-            }
-            return EventType.erorr;
-        }
 
         public void removAllEvents()
         {
-            AllEvents.Clear();
             if (File.Exists(fileName))
             {
                 File.Delete(fileName);
@@ -311,31 +178,7 @@ namespace Celibacy_days
             mainPanel.displaDays();
         }
 
-        public void removEvent(int dateEvent_, EventType eventType_)
-        {
-            if(removEventFromList( dateEvent_,  eventType_))
-            {
-                MainPanel.Instance.displaDays();
-                removEventFromFile(dateEvent_, eventType_);
-            }
-        }
-
-        private bool removEventFromList(int dateEvent_, EventType eventType_)
-        {
-            int listLenght = AllEvents.Count;
-            for (int i = 0; i < listLenght; i++)
-            {
-                if (AllEvents[i].dateEvent == dateEvent_ && AllEvents[i].eventType == eventType_)
-                {
-                    AllEvents.RemoveAt(i);
-                    return true;
-                }
-                if (AllEvents[i].dateEvent > dateEvent_)
-                    return false;
-            }
-            return false;
-        }
-        private bool removEventFromFile(int dateEvent_, EventType eventType_)
+        public bool removEventFromFile(int dateEvent_, VisionType eventType_)
         {
             string lineToDelete = dateEvent_ + " " + (int)eventType_;
             var tempFile = Path.GetTempFileName();
@@ -348,10 +191,5 @@ namespace Celibacy_days
             return false;
         }
 
-
-        public List<Event> getEvents()
-        {
-            return AllEvents;
-        }
     }
 }

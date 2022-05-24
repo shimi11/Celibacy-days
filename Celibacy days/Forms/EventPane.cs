@@ -33,20 +33,20 @@ namespace Celibacy_days.Forms
             dateEvent += MonthNum * 100;
             dateEvent += converter.FormatHebrew(dayInMonth_);
 
-            Database database = Database.Instance;
-            int myEnumMemberCount = Enum.GetNames(typeof(EventType)).Length;
+            int myEnumMemberCount = Enum.GetNames(typeof(VisionType)).Length;
             try
             {
                 for (int i = 0; i < myEnumMemberCount - 1; i++)
                 {
-                    string str = Enum.GetName(typeof(EventType), i);
-                    list_events.Items.Add(database.hashmapEvent[i]);
+                    //string str = Enum.GetName(typeof(VisionType), i);
+                    list_events.Items.Add(Environment.Instance.hashmapEvent[(VisionType)i]);
                 }
             }
             catch
             {
 
             }
+
 
         }
         private string dayInWeek;
@@ -59,8 +59,7 @@ namespace Celibacy_days.Forms
         private int dateEvent;
         private void save_event_Click(object sender, EventArgs e)
         {
-            Database database = Database.Instance;
-            database.addEvent(dateEvent, (EventType)list_events.SelectedIndex - 1);
+            Environment.Instance.addEvent(dateEvent, (VisionType)list_events.SelectedIndex - 1);
             //this.ShowDialog();
             this.Close();
 
